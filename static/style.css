@@ -1,0 +1,427 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ecf0f1;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* navbar css */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50; 
+    color: white;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-brand {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navbar-text {
+    font-size: 16px;
+    color: #ecf0f1;
+    margin-right: 15px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav form {
+    display: inline-block;
+    margin: 0;
+}
+/* end of navbar css */
+
+
+/* note display and note add form css */
+#note-imp {
+    background-color: #f1c40f; 
+    color: #2c3e50; 
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 12px;
+    
+}
+
+#note-edit-btn, #note-delete-btn {
+    border: none;
+    padding: 6px 12px;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
+#note-edit-btn {
+    background-color: #e67e22;
+}
+
+#note-edit-btn:hover {
+    background-color: #d35400;
+}
+
+#note-delete-btn {
+    background-color: #c0392b; 
+}
+
+#note-delete-btn:hover {
+    background-color: #a93226;
+}
+
+.container, .note-card {
+    background-color: #ffffff; 
+    border-radius: 10px; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px; 
+}
+
+.note-card {
+    border: 2px solid #d1d1d1; 
+    color: #2c3e50; 
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+#note-create-time {
+    font-size: smaller;
+}
+#note-update-time {
+    font-size: smaller;
+}
+/* end of the note display and note add form css */
+
+
+/* login, signup and logout button css */
+.login-button {
+    background-color: #3498db;
+    color: white;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 16px;
+    width: 90px;
+    border: none;
+}
+
+.login-button:hover {
+    background-color: #2980b9;
+}
+
+.signup-button {
+    background-color: #2ecc71;
+    color: white;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 16px;
+    width: 90px;
+    border: none;
+}
+
+.signup-button:hover {
+    background-color: #27ae60;
+}
+
+.logoutBtn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    font-size: 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 90px;
+}
+
+.logoutBtn:hover {
+    background-color: #c0392b;
+}
+/* end of login, signup and logout button css */
+
+
+/* signup and login forms css */
+.modal-ls{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content-ls {
+    background: white;
+    width: 350px;
+    padding: 25px;
+    border-radius: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal-ls.show .modal-content-ls {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: 0.3s;
+}
+.close:hover {
+    color: #333;
+}
+
+.login-form, .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-label, .signup-label {
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.login-input, .signup-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border 0.3s;
+}
+
+.login-input:focus {
+    border: 2px solid #007bff;
+    outline: none;
+}
+
+.signup-input:focus {
+    border: 2px solid #007bff;
+    outline: none;
+}
+
+.modal-content-ls .btn-login, .btn-signup {
+    font-size: 18px;
+    padding: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal-content-ls .btn-login {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+}
+.modal-content-ls .btn-login:hover {
+    background: linear-gradient(135deg, #0056b3, #00408a);
+    transform: scale(1.05);
+}
+
+.modal-content-ls .btn-signup {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+.modal-content-ls .btn-signup:hover {
+    background: linear-gradient(135deg, #1e7e34, #145e26);
+    transform: scale(1.05);
+}
+
+#verify-email-btn {
+    background-color: #f39c12; /* Orange color */
+    color: white;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 16px;
+    width: 120px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+}
+
+#verify-email-btn:hover {
+    background-color: #e67e22; /* Darker orange */
+    transform: scale(1.05);
+}
+/* end of signup and login forms css */
+
+
+/* footer css */
+.footer {
+    background-color: #2c3e50;
+    color: #ffffff;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 30px;
+    width: 100%;
+    position: relative; 
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.footer-nav {
+    margin-top: 5px;
+}
+
+.footer-nav a {
+    color: #bdc3c7; 
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.footer-nav a:hover {
+    color: #ecf0f1; 
+}
+/* end of footer css */
+
+
+/* Error message css */
+.error-message {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4d4d; 
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: auto;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.error-message.hide {
+    animation: fadeOut 1s ease-out forwards;
+    animation-delay: 4s; 
+}
+/* end of Error message css */
+
+/* otp modal css */
+.custom-modal {
+    display: none; 
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    height: 90%;
+    padding: 25px;
+    background: #ecf0f1;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    z-index: 1000;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.custom-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.custom-modal input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.custom-modal button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#otp-send-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+#otp-send-btn:hover {
+    background-color: #0056b3;
+}
+
+#otp-verify-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+#otp-verify-btn:hover {
+    background-color: #1e7e34;
+}
+
+#close-otp-modal {
+    background-color: #dc3545;
+    color: white;
+}
+
+#close-otp-modal:hover {
+    background-color: #c82333;
+}
+
+.custom-modal.show {
+    display: block;
+}
+/* end of otp modal css */

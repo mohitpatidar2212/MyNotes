@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Database / Local Storage
+*.log
+# If you run a local mongo instance that creates data folders
+config/db/
+
+# Static / IDE / OS Files
+.vscode/
+.idea/
+.DS_Store
+static/css/*.map
+
+# Dependency files (if you use tools like poetry)
+dist/
+build/
+*.egg-info/

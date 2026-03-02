@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyNotes - Manage Your Notes!</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="nav">
+        <span class="nav-brand">MyNotes</span>
+    
+        <div class="nav-right">
+            {% if request.cookies.get("user_id") %}
+                <span class="navbar-text">Welcome, {{ user_name }}!</span> 
+                <form action="/logout" method="get">
+                    <button class="logoutBtn">Logout</button>
+                </form>
+            {% else %}
+                <button class="login-button" onclick="openForm('loginForm')">Login</button>
+                <button class="signup-button" onclick="openForm('signupForm')">Sign up</button>
+            {% endif %}
+        </div>
+    </nav>    
+
+    <!-- Error msg -->
+    {% if request.query_params.get("error") %}
+        <p class="error-message">{{ request.query_params.get("error") }}</p>
+    {% endif %}
+
+    <!-- Add Note Form -->
+    <div class="container mt-4">
+        <h1>Add a New Note</h1>
+        <form action="/" method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">Note Title</label>
+                <input type="text" class="form-control" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="desc" class="form-label">Note Description</label>
+                <textarea class="form-control" name="desc" rows="3" required></textarea>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" id="Mark-note-imp" class="form-check-input" name="important">
+                <label class="form-check-label" for="Mark-note-imp">Mark as Important</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Note</button>
+        </form>
+    </div>
+
+    <!-- Notes Display -->
+    <div class="container mt-5">
+        {% if not request.cookies.get("user_id") %}
+            <p style="font-weight: bold; font-size: larger;">Signup or login to add and see your notes.</p>
+
+        {% else %}
+            <h2>Your Notes</h2>
+            {% if newDocs|length == 0 %}
+                <p class="text-muted">No notes to display.</p>
+            {% else %}
+                <div class="row">
+                    {% for item in newDocs %}
+                        <div class="col-md-4">
+                            <div class="card note-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ item.title }}</h5>
+                                    <p class="card-text">{{ item.desc }}</p>
+                                    <span id="note-create-time">Create - {{ item.created_at }}</span><br>
+                                    <span id="note-update-time">Last update - {{ item.updated_at }}</span>
+                                    {% if item.important %}
+                                        <span id="note-imp">Important</span>
+                                    {% endif %}
+                                    <div class="mt-3">
+                                        <button id="note-edit-btn" class="edit-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-desc="{{ item.desc }}" data-important="{{ item.important }}">Edit</button>
+                                        <form action="/delete/{{ item.id }}" method="post" style="display:inline;">
+                                            <button type="submit" id="note-delete-btn">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Edit Note -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Note</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editForm" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="editNoteId">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" id="editNoteTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="desc" id="editNoteDesc" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" name="important" id="editNoteImportant">
+                            <label class="form-check-label">Mark as Important</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Form (Modal) -->
+    <div id="loginForm" class="modal-ls">
+        <div class="modal-content-ls">
+            <span class="close" onclick="closeForm('loginForm')">&times;</span>
+            <h2>Login</h2>
+            <form action="/login" method="post" class="login-form">
+                <label for="login-email" class="login-label">Email:</label>
+                <input type="email" id="login-email" name="email" required class="login-input">
+
+                <label for="login-password" class="login-label">Password:</label>
+                <input type="password" id="login-password" name="password" required class="login-input">
+
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Form (Modal) -->
+    <div id="signupForm" class="modal-ls">
+        <div class="modal-content-ls">
+            <span class="close" onclick="closeForm('signupForm')">&times;</span>
+            <h2>Signup</h2>
+            <form action="/signup" method="post" class="signup-form">
+                <label for="signup-name" class="signup-label">Full Name:</label>
+                <input type="text" id="signup-name" name="name" required class="signup-input">
+
+                <label for="signup-email" class="signup-label">Email:</label>
+                <input type="email" id="signup-email" name="email" required class="signup-input">
+                <button type="button" id="verify-email-btn">Verify Email</button>
+
+                <label for="signup-password" class="signup-label">Password:</label>
+                <input type="password" id="signup-password" name="password" required class="signup-input">
+
+                <button type="submit" id="signup-btn" class="btn-signup" disabled>Signup</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- OTP Modal -->
+    <div id="otp-modal" class="custom-modal">
+        <div class="modal-content">
+            <h3>Email Verification</h3>
+            <input type="email" id="otp-email" readonly>
+            <input type="text" id="otp-input" placeholder="Enter OTP" required>
+            <button id="otp-send-btn">Send OTP</button>
+            <button id="otp-verify-btn">Verify</button>
+            <button id="close-otp-modal">Close</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 MyNotes. All rights reserved.</p>
+            <nav class="footer-nav">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap & JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const editButtons = document.querySelectorAll(".edit-btn");
+            const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+            const editForm = document.getElementById("editForm");
+
+            editButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    document.getElementById("editNoteId").value = this.dataset.id;
+                    document.getElementById("editNoteTitle").value = this.dataset.title;
+                    document.getElementById("editNoteDesc").value = this.dataset.desc;
+                    document.getElementById("editNoteImportant").checked = this.dataset.important === "True";
+                    editForm.action = `/update/${this.dataset.id}`;
+                    editModal.show();
+                });
+            });
+
+            // Logout confirmation
+            const logoutBtn = document.querySelector(".logoutBtn");
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", function (event) {
+                    let confirmLogout = confirm("Are you sure you want to log out?");
+                    if (!confirmLogout) {
+                        event.preventDefault(); // Stop logout if user cancels
+                    }
+                });
+            }
+
+            // Auto-hide error message
+            const errorBox = document.querySelector(".error-message");
+            if (errorBox) {
+                setTimeout(() => {
+                    errorBox.classList.add("hide");
+                }, 4000);
+            }
+
+            // Remove error query parameter from URL after delay
+            if (window.location.search.includes("error=")) {
+                setTimeout(() => {
+                    const url = new URL(window.location);
+                    url.searchParams.delete("error");
+                    window.history.replaceState({}, document.title, url.pathname);
+                }, 2000);
+            }
+        });
+
+        // Open the form
+        function openForm(formId) {
+            let modal = document.getElementById(formId);
+            modal.style.display = "block";
+            setTimeout(() => modal.classList.add("show"), 50);
+        }
+
+        // Close the form
+        function closeForm(formId) {
+            let modal = document.getElementById(formId);
+            modal.classList.remove("show");
+            setTimeout(() => (modal.style.display = "none"), 300);
+        }
+
+        // Close modal when clicking outside the content
+        // window.onclick = function (event) {
+        //     let modals = document.querySelectorAll(".modal-ls");
+        //     modals.forEach(modal => {
+        //         if (event.target == modal) {
+        //             closeForm(modal.id);
+        //         }
+        //     });
+        // };
+
+        document.getElementById("signup-btn").disabled = true;
+
+        document.getElementById("verify-email-btn").addEventListener("click", function() {
+            const email = document.getElementById("signup-email").value;
+            if (!email) {
+                alert("Please enter an email first.");
+                return;
+            }
+            document.getElementById("otp-email").value = email;
+            document.getElementById("otp-modal").style.display = "block";
+        });
+
+        document.getElementById("otp-send-btn").addEventListener("click", async function() {
+            const email = document.getElementById("otp-email").value;
+            
+            if (!email) {
+                alert("Please enter an email first.");
+                return;
+            }
+
+            // Disable the button and start the timer
+            const sendOtpButton = document.getElementById("otp-send-btn");
+            sendOtpButton.disabled = true;
+            sendOtpButton.style.pointerEvents = "none"; 
+            sendOtpButton.style.cursor = "not-allowed"; 
+            sendOtpButton.style.opacity = "0.6"; 
+            let countdown = 15; // Timer in seconds
+
+            // Function to update button text every second
+            function updateButtonText() {
+                sendOtpButton.innerText = `Wait ${countdown}s`;
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(timer);
+                    sendOtpButton.disabled = false;
+                    sendOtpButton.style.pointerEvents = "auto";
+                    sendOtpButton.style.cursor = "pointer"; 
+                    sendOtpButton.style.opacity = "1";
+                    sendOtpButton.innerText = "Send OTP";
+
+                }
+            }
+
+            // Start the countdown
+            updateButtonText();
+            let timer = setInterval(updateButtonText, 1000);
+
+            try {
+                const response = await fetch("/send-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email }),
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                alert("An error occurred while sending OTP. Please try again.");
+                clearInterval(timer);
+                sendOtpButton.disabled = false;
+                sendOtpButton.style.pointerEvents = "auto";
+                sendOtpButton.style.cursor = "pointer"; 
+                sendOtpButton.style.opacity = "1";
+                sendOtpButton.innerText = "Send OTP";
+            }
+        });
+
+        document.getElementById("otp-verify-btn").addEventListener("click", async function() {
+            const email = document.getElementById("otp-email").value;
+            const otp = document.getElementById("otp-input").value;
+            const response = await fetch("/verify-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, otp }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert(result.message);
+                document.getElementById("signup-btn").disabled = false;
+                document.getElementById("otp-modal").style.display = "none";
+            } else {
+                alert("Invalid OTP");
+            }
+        });
+
+        document.getElementById("close-otp-modal").addEventListener("click", function() {
+            document.getElementById("otp-modal").style.display = "none";
+        });
+
+    </script>
+
+</body>
+</html>
