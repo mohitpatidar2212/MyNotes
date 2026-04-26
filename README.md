@@ -8,6 +8,7 @@ A sleek, full-stack web application built with **FastAPI** and **MongoDB**. This
 - **CRUD Operations**: Full Create, Read, Update, and Delete capabilities for notes.
 - **Asynchronous Performance**: Built using `Motor` for non-blocking database operations.
 - **Responsive Design**: Modern UI using Bootstrap 5 and custom CSS transitions.
+- **Important Notes**: You can mark the notes as important.
 
 ## 🛠️ Getting Started
 
